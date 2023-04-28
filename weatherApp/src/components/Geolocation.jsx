@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import './Geolocation.css'
 
-export function Geolocation() {
+function Geolocation() {
 
   const [lat, setLat] = useState(null);
   const [lng, setLng] = useState(null);
@@ -27,8 +27,9 @@ export function Geolocation() {
   };
 
   return (
-    <div className="App">
-    <button onClick={() => getLocation()}>Get location</button>
+    <div className="Geo">
+        <b>Test</b>
+    <input type="button" onClick={() => getLocation()}>Get location</input>
     {status ? <p>Status: {status}</p> : <></>}
     <p>Latitude: {lat}</p>
     <p>Longitude: {lng}</p>
