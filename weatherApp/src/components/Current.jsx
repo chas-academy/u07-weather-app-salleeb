@@ -1,4 +1,4 @@
-import React from "react";
+/* eslint-disable react/prop-types */
 import './Current.css'
 
 export function Current({current, city}) {
@@ -10,8 +10,8 @@ export function Current({current, city}) {
                 <img src={current.condition.icon} alt={current.condition.text} />
                 <span><b>{current.condition.text}</b></span> |
                 <span><b>{current.temp_c}°</b></span> |
-                <span><b>Wind speed {current.wind_kph}</b></span> |
-                <span><b>Humidity {current.humidity}</b></span>
+                <span><b>Wind speed {current.wind_kph} km/h</b></span> |
+                <span><b>Humidity {current.humidity}%</b></span>
             </div>
 
         </div>
