@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import './App.css'
 import Current from './components/Current';
 import Forecast from './components/Forecast';
-// import Geolocation  from './components/Geolocation';
 
 const apiKey = import.meta.env.VITE_APP_KEY;
 const apiUrl = `https://api.weatherapi.com/v1/search.json?key=${apiKey}&q=`;
@@ -16,15 +15,6 @@ const App = () => {
   const [location, setLocation] = useState("");
   const [citySuggestion, setCitySuggestion] = useState([]);
 
-  // Geolocation
-  const [currentForecast, setCurrentForecast] = useState(undefined);
-  const [position, setPosition] = useState(undefined);
-
-  // const [lat, setLat] = useState(null);
-  // const [lng, setLng] = useState(null);
-  // const [status, setStatus] = useState(null);
-  // const [nearestCity, setNearestCity] = useState(""); // ?
-
   const handleClick = async (clickedCity) => {
     console.log(clickedCity);
     setCity(clickedCity);
@@ -35,34 +25,28 @@ const App = () => {
     setCurrent(data.current);
     setForecast(data.forecast);
     setLocation(data.location.name);
-    // setNearestCity(data.location.name); // ?
-    // console.log(setNearestCity);       // ?
-
   }
 
   // Geolocation
-  const getWeather =  async () => {
-    console.log(position);
-    const url = apiUrl + position.lat + ',' + position.lng + '&days=1&aqi=no&alerts=no';
-    const response = await fetch(url);
-    const result = response.json();
-    setCurrentForecast(result);
-    console.log(url);
+  const handleLocationClick = async () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        const curPosition = lat + "," + lng
+
+        const resp = await fetch(weatherUrl(curPosition));
+        const data = await resp.json();
+        setCurrent(data.current);
+        setForecast(data.forecast);
+        setLocation(data.location.name);
+
+        console.log(weatherUrl(curPosition))
+      })
+    }
   }
 
   useEffect(() => {
-  // Geolocation
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        console.log("Smooth sailing");
-        setPosition({ lat: pos.coords.latitude, lng: pos.coords.longitude});
-      },
-      () => {
-        console.log("Fail");
-        setStatus("Unable to retrieve your location"); // Dubbelkolla så det syns för user!
-      }
-    );
-
     const getDataAfterTimeout = setTimeout(() => {
       const fetchCitySuggestion = async () => {
 
@@ -97,7 +81,7 @@ const App = () => {
         value={city}
         onChange={(event) => setCity(event.target.value)}/>
                 
-        <button onClick={() => getWeather()}>Get current position</button>
+        <button onClick={() => handleLocationClick()}>Get current position</button>
 
         {citySuggestion.length > 0 && (
           <div>
@@ -107,14 +91,10 @@ const App = () => {
           ))}
           </div>
         )}
-        { current && <Current current={current} city={location}/> }
-        { forecast && <Forecast forecast={forecast} city={location}/> }
 
-        {/* Geolocation */}
-        {/* {current && <Current current={current} city={location}/> } */}
-        {/* {status ? <p>Status: {status}</p> : <></>}
-        <p>Latitude: {lat}</p>
-        <p>Longitude: {lng}</p> */}
+        { current && <Current current={current} city={location} forecast={forecast}/> }
+        { forecast && <Forecast forecast={forecast} city={location}/> }
+        
         </div>
       </div>
     </>
