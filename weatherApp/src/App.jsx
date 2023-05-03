@@ -8,6 +8,8 @@ const apiUrl = `https://api.weatherapi.com/v1/search.json?key=${apiKey}&q=`;
 const weatherUrl = (city) => `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${city}&days=7&aqi=no&alerts=no`;
 
 const App = () => {
+
+  const [units, setUnits] = useState(Boolean);
   const [city, setCity] = useState("");
   const [clicked, setClicked] = useState(false);
   const [current, setCurrent] = useState();
@@ -15,8 +17,13 @@ const App = () => {
   const [location, setLocation] = useState("");
   const [citySuggestion, setCitySuggestion] = useState([]);
 
+  // const handleUnits = (e) => {
+  //   const selectedUnit = e.currentTarget.name;
+  //   if (units !== selectedUnit) setUnits(selectedUnit);
+  // }
+
   const handleClick = async (clickedCity) => {
-    console.log(clickedCity);
+    // console.log(clickedCity);
     setCity(clickedCity);
     setClicked(true);
 
@@ -25,6 +32,7 @@ const App = () => {
     setCurrent(data.current);
     setForecast(data.forecast);
     setLocation(data.location.name);
+
   }
 
   // Geolocation
@@ -41,10 +49,13 @@ const App = () => {
         setForecast(data.forecast);
         setLocation(data.location.name);
 
-        console.log(weatherUrl(curPosition))
+        // console.log(weatherUrl(curPosition))
       })
     }
   }
+
+  // Fixa att förslagsalternativ user klickat på är kvar efter clicked
+    // och fixa error
 
   useEffect(() => {
     const getDataAfterTimeout = setTimeout(() => {
@@ -53,9 +64,7 @@ const App = () => {
         const resp = await fetch(apiUrl + city);
         const data = await resp.json();
         const citySuggestionData = data.map(curData => 
-          `${curData.name},
-          ${curData.region},
-          ${curData.country}`
+          `${curData.name}, ${curData.region}, ${curData.country}`
           );
         setCitySuggestion(citySuggestionData);
       };
@@ -71,9 +80,14 @@ const App = () => {
     return () => clearTimeout(getDataAfterTimeout);
   }, [city, clicked])
 
+
   return (
     <>
       <div className="App">
+
+        {/* <button name="celsius" onClick={handleUnits}>C</button>
+        <button name="fahrenheit" onClick={handleUnits}>F</button> */}
+
         <div className='app_body'>
         <input type="text"
         className='userInput'
@@ -94,7 +108,7 @@ const App = () => {
 
         { current && <Current current={current} city={location} forecast={forecast}/> }
         { forecast && <Forecast forecast={forecast} city={location}/> }
-        
+
         </div>
       </div>
     </>
