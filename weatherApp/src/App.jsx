@@ -8,14 +8,14 @@ const apiUrl = `https://api.weatherapi.com/v1/search.json?key=${apiKey}&q=`;
 const weatherUrl = (city) => `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${city}&days=7&aqi=no&alerts=no`;
 
 const App = () => {
-
-  const [units, setUnits] = useState(Boolean);
+  // const [units, setUnits] = useState(Boolean);
   const [city, setCity] = useState("");
   const [clicked, setClicked] = useState(false);
   const [current, setCurrent] = useState();
   const [forecast, setForecast] = useState(undefined);
   const [location, setLocation] = useState("");
   const [citySuggestion, setCitySuggestion] = useState([]);
+  const [hour, setHour] = useState([]);
 
   // const handleUnits = (e) => {
   //   const selectedUnit = e.currentTarget.name;
@@ -23,7 +23,6 @@ const App = () => {
   // }
 
   const handleClick = async (clickedCity) => {
-    // console.log(clickedCity);
     setCity(clickedCity);
     setClicked(true);
 
@@ -32,7 +31,7 @@ const App = () => {
     setCurrent(data.current);
     setForecast(data.forecast);
     setLocation(data.location.name);
-
+    setHour(data.forecast.hour);
   }
 
   // Geolocation
@@ -48,8 +47,7 @@ const App = () => {
         setCurrent(data.current);
         setForecast(data.forecast);
         setLocation(data.location.name);
-
-        // console.log(weatherUrl(curPosition))
+        setHour(data.forecast.hour);
       })
     }
   }
@@ -80,7 +78,6 @@ const App = () => {
     return () => clearTimeout(getDataAfterTimeout);
   }, [city, clicked])
 
-
   return (
     <>
       <div className="App">
@@ -106,7 +103,7 @@ const App = () => {
           </div>
         )}
 
-        { current && <Current current={current} city={location} forecast={forecast}/> }
+        { current && <Current current={current} city={location} forecast={forecast} hour={hour}/> }
         { forecast && <Forecast forecast={forecast} city={location}/> }
 
         </div>

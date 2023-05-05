@@ -1,8 +1,6 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
 import { useEffect, useState } from 'react';
 import './Current.css'
-
 
 export function Current({current, city, forecast: {forecastday}}) {
     const [hourlyForecast, setHourlyForecast] = useState([]);
@@ -30,11 +28,10 @@ export function Current({current, city, forecast: {forecastday}}) {
 
         const curDay = forecastday[0].hour;
         const nextDay = forecastday[1].hour;
+        const curHours = [...curDay, ...nextDay].slice(0, -22);
+        setHourlyForecast(curHours);
 
-        setHourlyForecast([...curDay, ...nextDay]);
-
-    }, [forecastday])
-
+    }, [forecastday]);
 
     return (
         <div className="current">
@@ -42,21 +39,30 @@ export function Current({current, city, forecast: {forecastday}}) {
             <h1>{city}</h1>
             <h2>Current weather</h2>
             <div>
+                <span><p>Sunrise: {forecastday[0].astro.sunrise}</p></span>
+                <span><p>Sunset: {forecastday[0].astro.sunset}</p></span>
                 <img src={current.condition.icon} alt={current.condition.text} />
                 <span><b>{current.condition.text}</b></span> |
                 <span className='celsius'><b>{current.temp_c}°C</b></span> |
                 <span className='fahrenheit'><b>{current.temp_f}°F</b></span> |
                 <span><b>Wind speed {current.wind_kph} km/h</b></span> |
                 <span><b>Humidity {current.humidity}%</b></span>
+                <p>Chance of rain: {current.daily_chance_of_rain}%</p>
 
                 {hourlyForecast.map((hour, idx) => {
                     const curTime = hour.time;
-                    if (curTime >= curDateAndTime) {
+                    const hours = curTime.toString().slice(11);
+                    if (curTime > curDateAndTime) {
                         return (
                             <div key={idx}>
-                                <b>{curTime}</b>
+                                <b>{hours}</b>
                                 <img src={hour.condition.icon} alt={hour.condition.text} />
                                 <b>{hour.condition.text}</b>
+                                <span className='celsius'><b>{hour.temp_c}°C</b></span> |
+                                <span className='fahrenheit'><b>{hour.temp_f}°F</b></span> |
+                                <span><b>Wind speed {hour.wind_kph} km/h</b></span> |
+                                <span><b>Humidity {hour.humidity}%</b></span>
+                                <p>Chance of rain: {hour.daily_chance_of_rain}%</p>
                             </div>
                             );
                         }
