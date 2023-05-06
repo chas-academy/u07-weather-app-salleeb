@@ -6,6 +6,7 @@ export function Current({current, city, forecast: {forecastday}}) {
     const [hourlyForecast, setHourlyForecast] = useState([]);
     const [newDate, setNewDate] = useState("");
     const [time, setTime] = useState("");
+    // const [chanceOfRain, setChanceOfRain] = useState([]);
     
     const curDateAndTime = newDate + " " + time;
 
@@ -28,17 +29,27 @@ export function Current({current, city, forecast: {forecastday}}) {
 
         const curDay = forecastday[0].hour;
         const nextDay = forecastday[1].hour;
-        const curHours = [...curDay, ...nextDay].slice(0, -22);
+        const curHours = [...curDay, ...nextDay].slice(0, -10);
         setHourlyForecast(curHours);
 
+        // const rainForecast = hourlyForecast.map((res) => {
+        //     const rainHourly = res.chance_of_rain
+        //     console.log(rainHourly)
+        // })
+        // setChanceOfRain(rainForecast);
+
     }, [forecastday]);
+
+    // console.log(forecastday)
+    // console.log(hourlyForecast)
+    // console.log(chanceOfRain)
 
     return (
         <div className="current">
 
             <h1>{city}</h1>
             <h2>Current weather</h2>
-            <div>
+            <div key={current} id={current}>
                 <span><p>Sunrise: {forecastday[0].astro.sunrise}</p></span>
                 <span><p>Sunset: {forecastday[0].astro.sunset}</p></span>
                 <img src={current.condition.icon} alt={current.condition.text} />
@@ -47,14 +58,14 @@ export function Current({current, city, forecast: {forecastday}}) {
                 <span className='fahrenheit'><b>{current.temp_f}°F</b></span> |
                 <span><b>Wind speed {current.wind_kph} km/h</b></span> |
                 <span><b>Humidity {current.humidity}%</b></span>
-                <p>Chance of rain: {current.daily_chance_of_rain}%</p>
+                {/* <p>Chance of rain: {current.daily_chance_of_rain}%</p> */}
 
-                {hourlyForecast.map((hour, idx) => {
+                {hourlyForecast.map((hour) => {
                     const curTime = hour.time;
                     const hours = curTime.toString().slice(11);
                     if (curTime > curDateAndTime) {
                         return (
-                            <div key={idx}>
+                            <div key={hour.time} id={hour.time}>
                                 <b>{hours}</b>
                                 <img src={hour.condition.icon} alt={hour.condition.text} />
                                 <b>{hour.condition.text}</b>
@@ -62,7 +73,7 @@ export function Current({current, city, forecast: {forecastday}}) {
                                 <span className='fahrenheit'><b>{hour.temp_f}°F</b></span> |
                                 <span><b>Wind speed {hour.wind_kph} km/h</b></span> |
                                 <span><b>Humidity {hour.humidity}%</b></span>
-                                <p>Chance of rain: {hour.daily_chance_of_rain}%</p>
+                                {/* <p>Chance of rain: {hour.chance_of_rain}%</p> */}
                             </div>
                             );
                         }

@@ -76,7 +76,7 @@ const App = () => {
     }, 1000); // Ändra sekunder?
 
     return () => clearTimeout(getDataAfterTimeout);
-  }, [city, clicked])
+  }, [city])
 
   return (
     <>
