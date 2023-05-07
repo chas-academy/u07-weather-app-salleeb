@@ -1,12 +1,22 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from 'react';
+// import {Converter} from './Converter';
 import './Current.css'
 
-export function Current({current, city, forecast: {forecastday}}) {
+export function Current( {current, city, forecast: {forecastday}}) {
     const [hourlyForecast, setHourlyForecast] = useState([]);
     const [newDate, setNewDate] = useState("");
     const [time, setTime] = useState("");
+
+    const [unit, setUnit] = useState(false); 
+    // const [unit, setUnit ] = useState("C");
+
+    // const unitConverter = unit ? "C" : "F";
     // const [chanceOfRain, setChanceOfRain] = useState([]);
+
+    const unitConverter = () => {
+        setUnit(!unit)
+    }
     
     const curDateAndTime = newDate + " " + time;
 
@@ -29,7 +39,7 @@ export function Current({current, city, forecast: {forecastday}}) {
 
         const curDay = forecastday[0].hour;
         const nextDay = forecastday[1].hour;
-        const curHours = [...curDay, ...nextDay].slice(0, -10);
+        const curHours = [...curDay, ...nextDay];
         setHourlyForecast(curHours);
 
         // const rainForecast = hourlyForecast.map((res) => {
@@ -40,12 +50,23 @@ export function Current({current, city, forecast: {forecastday}}) {
 
     }, [forecastday]);
 
+
     // console.log(forecastday)
-    // console.log(hourlyForecast)
+    console.log(hourlyForecast)
     // console.log(chanceOfRain)
+
+    // state = {
+    //     fahrenheit: `<span className='fahrenheit'><b>{current.temp_f}°F</b></span>`
+    // };
+
+    // changeToFahrenheit = (fahrenheit) => {
+    //     this.setState({fahrenheit});
+    // }
 
     return (
         <div className="current">
+
+            <button onClick={unitConverter}>C&deg; |  F&deg;</button>
 
             <h1>{city}</h1>
             <h2>Current weather</h2>
@@ -54,8 +75,13 @@ export function Current({current, city, forecast: {forecastday}}) {
                 <span><p>Sunset: {forecastday[0].astro.sunset}</p></span>
                 <img src={current.condition.icon} alt={current.condition.text} />
                 <span><b>{current.condition.text}</b></span> |
-                <span className='celsius'><b>{current.temp_c}°C</b></span> |
-                <span className='fahrenheit'><b>{current.temp_f}°F</b></span> |
+                <b>{unit ? current.temp_c + "°C" : current.temp_f + "°F"}</b>
+                
+                {/* <span className='celsius'><b>{Converter ? current.temp_c + "°C" : current.temp_f + "°F"}</b></span> */}
+                
+                {/* <span className='celsius'><b>{unitConverter ? current.temp_c + "°C" : current.temp_f + "°F"}</b></span> | */}
+                {/* <span className='celsius'><b>{current.temp_c}°C</b></span> |
+                <span className='fahrenheit'><b>{current.temp_f}°F</b></span> | */}
                 <span><b>Wind speed {current.wind_kph} km/h</b></span> |
                 <span><b>Humidity {current.humidity}%</b></span>
                 {/* <p>Chance of rain: {current.daily_chance_of_rain}%</p> */}
@@ -69,8 +95,11 @@ export function Current({current, city, forecast: {forecastday}}) {
                                 <b>{hours}</b>
                                 <img src={hour.condition.icon} alt={hour.condition.text} />
                                 <b>{hour.condition.text}</b>
-                                <span className='celsius'><b>{hour.temp_c}°C</b></span> |
-                                <span className='fahrenheit'><b>{hour.temp_f}°F</b></span> |
+
+                                <b>{unit ? hour.temp_c + "°C" : hour.temp_f + "°F"}</b>
+
+                                {/* <span className='celsius'><b>{hour.temp_c}°C</b></span> | */}
+                                {/* <span className='fahrenheit'><b>{hour.temp_f}°F</b></span> | */}
                                 <span><b>Wind speed {hour.wind_kph} km/h</b></span> |
                                 <span><b>Humidity {hour.humidity}%</b></span>
                                 {/* <p>Chance of rain: {hour.chance_of_rain}%</p> */}

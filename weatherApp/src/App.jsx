@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import './App.css'
 import Current from './components/Current';
 import Forecast from './components/Forecast';
+// import Converter from './components/Converter';
 
 const apiKey = import.meta.env.VITE_APP_KEY;
 const apiUrl = `https://api.weatherapi.com/v1/search.json?key=${apiKey}&q=`;
@@ -16,6 +17,11 @@ const App = () => {
   const [location, setLocation] = useState("");
   const [citySuggestion, setCitySuggestion] = useState([]);
   const [hour, setHour] = useState([]);
+  // const [unit, setUnit] = useState(false);
+
+  // const unitConverter = () => {
+  //   setUnit(!unit)
+  // };
 
   // const handleUnits = (e) => {
   //   const selectedUnit = e.currentTarget.name;
@@ -52,9 +58,6 @@ const App = () => {
     }
   }
 
-  // Fixa att förslagsalternativ user klickat på är kvar efter clicked
-    // och fixa error
-
   useEffect(() => {
     const getDataAfterTimeout = setTimeout(() => {
       const fetchCitySuggestion = async () => {
@@ -73,7 +76,7 @@ const App = () => {
         setCitySuggestion([]);
         setClicked(false);
       }
-    }, 1000); // Ändra sekunder?
+    }, 100);
 
     return () => clearTimeout(getDataAfterTimeout);
   }, [city])
@@ -81,10 +84,7 @@ const App = () => {
   return (
     <>
       <div className="App">
-
-        {/* <button name="celsius" onClick={handleUnits}>C</button>
-        <button name="fahrenheit" onClick={handleUnits}>F</button> */}
-
+        {/* <Converter test={unitConverter}/> */}
         <div className='app_body'>
         <input type="text"
         className='userInput'
