@@ -41,51 +41,52 @@ export function Weather({current, city, forecast: {forecastday}}) {
     // console.log(forecastday)
 
     return (
-        <div className="weather">
-
+        <>
             <button onClick={unitConverter}>C&deg; |  F&deg;</button>
+            <div className="weather">
+                <div key={current} id={current}>
+                    <div className='bg-cyan-600	opacity-75 rounded-lg'>
+                        <h1>{city}</h1>
+                        <h2>Current weather</h2>
+                        <span><p>Sunrise: {forecastday[0].astro.sunrise}</p></span>
+                        <span><p>Sunset: {forecastday[0].astro.sunset}</p></span>
+                        <img src={current.condition.icon} alt={current.condition.text} className='mx-auto'/>
+                        <span><b>{current.condition.text}</b></span> |
+                        <b>{unit ? current.temp_c + "°C" : current.temp_f + "°F"}</b>
+                        <span><b>Wind speed {current.wind_kph} km/h</b></span> |
+                        <span><b>Humidity {current.humidity}%</b></span>
+                    </div>
 
-            <h1>{city}</h1>
-            <h2>Current weather</h2>
-            <div key={current} id={current}>
-                <span><p>Sunrise: {forecastday[0].astro.sunrise}</p></span>
-                <span><p>Sunset: {forecastday[0].astro.sunset}</p></span>
-                <img src={current.condition.icon} alt={current.condition.text} />
-                <span><b>{current.condition.text}</b></span> |
-                <b>{unit ? current.temp_c + "°C" : current.temp_f + "°F"}</b>
-                <span><b>Wind speed {current.wind_kph} km/h</b></span> |
-                <span><b>Humidity {current.humidity}%</b></span>
+                    {hourlyForecast.map((hour) => {
+                        const curTime = hour.time;
+                        const hours = curTime.toString().slice(11);
+                        if (curTime > curDateAndTime) {
+                            return (
+                                <div key={hour.time} id={hour.time}>
+                                    <b>{hours}</b>
+                                    <img src={hour.condition.icon} alt={hour.condition.text} className='mx-auto'/>
+                                    <b>{hour.condition.text}</b>
+                                    <b>{unit ? hour.temp_c + "°C" : hour.temp_f + "°F"}</b>
+                                    <span><b>Wind speed {hour.wind_kph} km/h</b></span> |
+                                    <span><b>Humidity {hour.humidity}%</b></span>
+                                </div>
+                                );
+                            }
+                            
+                        })}
+                </div>            
 
-                {hourlyForecast.map((hour) => {
-                    const curTime = hour.time;
-                    const hours = curTime.toString().slice(11);
-                    if (curTime > curDateAndTime) {
-                        return (
-                            <div key={hour.time} id={hour.time}>
-                                <b>{hours}</b>
-                                <img src={hour.condition.icon} alt={hour.condition.text} />
-                                <b>{hour.condition.text}</b>
-                                <b>{unit ? hour.temp_c + "°C" : hour.temp_f + "°F"}</b>
-                                <span><b>Wind speed {hour.wind_kph} km/h</b></span> |
-                                <span><b>Humidity {hour.humidity}%</b></span>
-                            </div>
-                            );
-                        }
-                        
-                    })}
-            </div>            
-
-
-            <h2>Forecast for {city}</h2>
-            {forecastday.map((diffDate) => (
-                <div key={diffDate.date} id={diffDate.date}>
-                <img src={diffDate.day.condition.icon} alt={diffDate.day.condition.text} />
-                <b>{diffDate.date} | </b>
-                <b>{diffDate.day.condition.text} | </b>
-                <b>{unit ? "Max: " + diffDate.day.maxtemp_c + "°C " + "Min: " + diffDate.day.mintemp_c + "°C" : "Max: " + diffDate.day.maxtemp_f + "°F " + "Min: " + diffDate.day.mintemp_f + "°F" }</b>
-                </div>
-            ))}
-        </div>
+                    <h2>Forecast for {city}</h2>
+                    {forecastday.map((diffDate) => (
+                    <div key={diffDate.date} id={diffDate.date}>
+                        <img src={diffDate.day.condition.icon} alt={diffDate.day.condition.text} />
+                        <b>{diffDate.date} | </b>
+                        <b>{diffDate.day.condition.text} | </b>
+                        <b>{unit ? "Max: " + diffDate.day.maxtemp_c + "°C " + "Min: " + diffDate.day.mintemp_c + "°C" : "Max: " + diffDate.day.maxtemp_f + "°F " + "Min: " + diffDate.day.mintemp_f + "°F" }</b>
+                    </div>
+                    ))}
+            </div>
+        </>
     )
 }
 

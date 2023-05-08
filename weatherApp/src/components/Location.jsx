@@ -70,8 +70,8 @@ export function Location() {
 
  return (
     <>
-      <div className="Location">
-        <div className='body'>
+      <div className="location flex justify-center text-center">
+        <div className="body w-8/12">
         <input type="text"
         className='userInput'
         placeholder='Enter your position'
