@@ -1,18 +1,13 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from 'react';
-// import {Converter} from './Converter';
-import './Current.css'
+import './Weather.css'
 
-export function Current( {current, city, forecast: {forecastday}}) {
+export function Weather({current, city, forecast: {forecastday}}) {
     const [hourlyForecast, setHourlyForecast] = useState([]);
     const [newDate, setNewDate] = useState("");
     const [time, setTime] = useState("");
 
     const [unit, setUnit] = useState(false); 
-    // const [unit, setUnit ] = useState("C");
-
-    // const unitConverter = unit ? "C" : "F";
-    // const [chanceOfRain, setChanceOfRain] = useState([]);
 
     const unitConverter = () => {
         setUnit(!unit)
@@ -42,29 +37,14 @@ export function Current( {current, city, forecast: {forecastday}}) {
         const curHours = [...curDay, ...nextDay];
         setHourlyForecast(curHours);
 
-        // const rainForecast = hourlyForecast.map((res) => {
-        //     const rainHourly = res.chance_of_rain
-        //     console.log(rainHourly)
-        // })
-        // setChanceOfRain(rainForecast);
-
     }, [forecastday]);
 
 
+    console.log(current)
     console.log(forecastday)
-    // console.log(hourlyForecast)
-    // console.log(chanceOfRain)
-
-    // state = {
-    //     fahrenheit: `<span className='fahrenheit'><b>{current.temp_f}°F</b></span>`
-    // };
-
-    // changeToFahrenheit = (fahrenheit) => {
-    //     this.setState({fahrenheit});
-    // }
 
     return (
-        <div className="current">
+        <div className="weather">
 
             <button onClick={unitConverter}>C&deg; |  F&deg;</button>
 
@@ -76,15 +56,8 @@ export function Current( {current, city, forecast: {forecastday}}) {
                 <img src={current.condition.icon} alt={current.condition.text} />
                 <span><b>{current.condition.text}</b></span> |
                 <b>{unit ? current.temp_c + "°C" : current.temp_f + "°F"}</b>
-                
-                {/* <span className='celsius'><b>{Converter ? current.temp_c + "°C" : current.temp_f + "°F"}</b></span> */}
-                
-                {/* <span className='celsius'><b>{unitConverter ? current.temp_c + "°C" : current.temp_f + "°F"}</b></span> | */}
-                {/* <span className='celsius'><b>{current.temp_c}°C</b></span> |
-                <span className='fahrenheit'><b>{current.temp_f}°F</b></span> | */}
                 <span><b>Wind speed {current.wind_kph} km/h</b></span> |
                 <span><b>Humidity {current.humidity}%</b></span>
-                {/* <p>Chance of rain: {current.daily_chance_of_rain}%</p> */}
 
                 {hourlyForecast.map((hour) => {
                     const curTime = hour.time;
@@ -95,22 +68,28 @@ export function Current( {current, city, forecast: {forecastday}}) {
                                 <b>{hours}</b>
                                 <img src={hour.condition.icon} alt={hour.condition.text} />
                                 <b>{hour.condition.text}</b>
-
                                 <b>{unit ? hour.temp_c + "°C" : hour.temp_f + "°F"}</b>
-
-                                {/* <span className='celsius'><b>{hour.temp_c}°C</b></span> | */}
-                                {/* <span className='fahrenheit'><b>{hour.temp_f}°F</b></span> | */}
                                 <span><b>Wind speed {hour.wind_kph} km/h</b></span> |
                                 <span><b>Humidity {hour.humidity}%</b></span>
-                                {/* <p>Chance of rain: {hour.chance_of_rain}%</p> */}
                             </div>
                             );
                         }
                         
                     })}
             </div>            
+
+
+            <h2>Forecast for {city}</h2>
+            {forecastday.map((diffDate) => (
+                <div key={diffDate.date} id={diffDate.date}>
+                <img src={diffDate.day.condition.icon} alt={diffDate.day.condition.text} />
+                <b>{diffDate.date} | </b>
+                <b>{diffDate.day.condition.text} | </b>
+                <b>{unit ? "Max: " + diffDate.day.maxtemp_c + "°C " + "Min: " + diffDate.day.mintemp_c + "°C" : "Max: " + diffDate.day.maxtemp_f + "°F " + "Min: " + diffDate.day.mintemp_f + "°F" }</b>
+                </div>
+            ))}
         </div>
     )
 }
 
-export default Current
+export default Weather
