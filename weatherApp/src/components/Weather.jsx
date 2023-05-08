@@ -6,7 +6,6 @@ export function Weather({current, city, forecast: {forecastday}}) {
     const [hourlyForecast, setHourlyForecast] = useState([]);
     const [newDate, setNewDate] = useState("");
     const [time, setTime] = useState("");
-
     const [unit, setUnit] = useState(false); 
 
     const unitConverter = () => {
@@ -39,9 +38,7 @@ export function Weather({current, city, forecast: {forecastday}}) {
 
     }, [forecastday]);
 
-
-    console.log(current)
-    console.log(forecastday)
+    // console.log(forecastday)
 
     return (
         <div className="weather">
