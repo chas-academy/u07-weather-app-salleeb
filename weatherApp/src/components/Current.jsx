@@ -51,8 +51,8 @@ export function Current( {current, city, forecast: {forecastday}}) {
     }, [forecastday]);
 
 
-    // console.log(forecastday)
-    console.log(hourlyForecast)
+    console.log(forecastday)
+    // console.log(hourlyForecast)
     // console.log(chanceOfRain)
 
     // state = {
