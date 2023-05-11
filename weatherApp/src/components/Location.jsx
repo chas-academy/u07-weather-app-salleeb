@@ -41,6 +41,7 @@ export function Location() {
         setForecast(data.forecast);
         setLocation(data.location.name);
         setHour(data.forecast.hour);
+        clearTimeout()
       })
     }
   }
