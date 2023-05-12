@@ -45,11 +45,11 @@ export function Weather({current, city, forecast: {forecastday}}) {
     return (
         <>
             <button type="button" onClick={unitConverter}>C&deg; |  F&deg;</button>
-            <div className="weather bg-cyan-600 opacity-75 rounded-lg">
+            <div>
+            {/* <h2 className='h2'>Current weather</h2> */}
                 <div key={current} id={current}>
                     <div className='current'>
                         <h1 className='h1'>{city}</h1>
-                        <h2 className='h2'>Current weather</h2>
                         <b className='curTemp'>{unit ? current.temp_c + "°C" : current.temp_f + "°F"}</b>
                         <img src={current.condition.icon} alt={current.condition.text} className='curImage'/>
                         <h3 className='curText'>{current.condition.text}</h3>

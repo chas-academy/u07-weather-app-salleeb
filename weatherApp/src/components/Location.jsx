@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Icon } from '@iconify/react';
 import './Location.css'
 import Weather from './Weather';
 
@@ -72,23 +73,29 @@ export function Location() {
  return (
     <>
       <div className="location flex justify-center text-center">
-        <div className="body w-8/12">
+        <div className="body w-8/12 bg-cyan-600 opacity-75 rounded-lg">
+        <div className='inline-block'>
         <input type="text"
         className='userInput'
         placeholder='Enter your position'
         value={city}
         onChange={(event) => setCity(event.target.value)}/>
                 
-        <button onClick={() => handleLocationClick()}>Get current position</button>
+        <div className='posBtn'>
+          <button className='searchBtn flex' onClick={() => handleLocationClick()}>
+          <Icon icon="ep:position" />
+            Get current position</button>
+        </div>
 
         {citySuggestion.length > 0 && (
-          <div>
+          <div className='suggestion'>
           {citySuggestion.map(curCity => (
-            <div key={curCity} className="suggestion" onClick={() =>
+            <div key={curCity} className="hover:bg-slate-400 hover:text-white hover:cursor-pointer" onClick={() =>
               handleClick(curCity)}>{curCity}</div>
           ))}
           </div>
         )}
+        </div>
 
         { current && forecast && <Weather current={current} city={location} forecast={forecast} hour={hour}/> }
 
