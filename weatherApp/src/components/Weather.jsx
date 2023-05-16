@@ -40,20 +40,20 @@ export function Weather({current, city, forecast: {forecastday}}) {
         
     }, [forecastday]);
 
-    // console.log(forecastday)
-
     return (
         <>
-            <button type="button" onClick={unitConverter}>C&deg; |  F&deg;</button>
             <div>
-            {/* <h2 className='h2'>Current weather</h2> */}
-                <div key={current} id={current}>
+                <div key={current} id={current} className='bg bg-cyan-600 rounded-lg opacity-80'>
+                    <div className='flex justify-end pt-2'>
+                        <button type="button" onClick={unitConverter}><span className='btn-text hover:bg-slate-400 py-1 hover:text-black rounded'>C&deg; |  F&deg;</span></button>
+                    </div>
                     <div className='current'>
                         <h1 className='h1'>{city}</h1>
                         <b className='curTemp'>{unit ? current.temp_c + "°C" : current.temp_f + "°F"}</b>
                         <img src={current.condition.icon} alt={current.condition.text} className='curImage'/>
                         <h3 className='curText'>{current.condition.text}</h3>
-                        <div className='flex justify-center'>
+                        <div className=''>
+                        <div className='curForecast flex justify-center'>
                             <div className='sunrise flex justify-center items-center'>
                             <Icon icon="wi:sunrise" className='icon'/>
                             <p>Sunrise: {forecastday[0].astro.sunrise}</p>
@@ -63,15 +63,16 @@ export function Weather({current, city, forecast: {forecastday}}) {
                             <p>Sunset: {forecastday[0].astro.sunset}</p>
                             </div>
                         </div>
-                        <div className='flex justify-center'>
+                        <div className='curForecast flex justify-center'>
                             <div className='wind flex justify-center items-center'>
                                 <Icon icon="ph:wind" className='smallIcon'/>
-                                <p>Wind speed {current.wind_kph} km/h</p>
+                                <p className='text'>Wind speed {current.wind_kph} km/h</p>
                             </div>
                             <div className='flex justify-center items-center'>
                                 <Icon icon="material-symbols:humidity-mid" className='smallIcon'/>
-                                <p>Humidity {current.humidity}%</p>
+                                <p className='text'>Humidity {current.humidity}%</p>
                             </div>
+                        </div>
                         </div>
                     </div>
                     
@@ -94,6 +95,9 @@ export function Weather({current, city, forecast: {forecastday}}) {
                                             <Icon icon="material-symbols:humidity-mid" className='smallIcon'/>
                                             <p>{hour.humidity}%</p>
                                         </div>
+                                        <div>
+                                            <p>{}</p>
+                                        </div>
                                 </div>
                             );
                         }
@@ -102,22 +106,32 @@ export function Weather({current, city, forecast: {forecastday}}) {
 
                     <h2 className='forecast'>Forecast for {city}</h2>
                     {forecastday.map((diffDate) => (
+                        console.log(diffDate),
                     <div key={diffDate.date} id={diffDate.date} className='forecastDays'>
                         <b className='dates'>{diffDate.date}</b>
-                        <div className='flex justify-center items-center'>
+                        <div className='daysForecast flex justify-center items-center'>
                             <div>
                                 <img src={diffDate.day.condition.icon} alt={diffDate.day.condition.text} className='bigImg'/>
                             </div>
                             <div>
-                            {/* <h2 className='h2'>{diffDate.day.condition.text}</h2> */}
                             <b className='daysTemp'>{unit ? "Max: " + diffDate.day.maxtemp_c + "°C " + "Min: " + diffDate.day.mintemp_c + "°C" : "Max: " + diffDate.day.maxtemp_f + "°F " + "Min: " + diffDate.day.mintemp_f + "°F" }</b>
-                                <div className='flex justify-center items-center'>
+                                <div>
+                                <div className='flex justify-center'>
                                     <Icon icon="ph:wind" className='smallIcon'/>
                                     <p>Wind speed {diffDate.day.maxwind_kph} km/h</p>
                                 </div>
-                                <div className='flex justify-center items-center'>
+                                <div className='flex justify-center'>
                                     <Icon icon="material-symbols:humidity-mid" className='smallIcon'/>
                                     <p>Humidity {diffDate.day.avghumidity}%</p>
+                                </div>
+                                <div className='flex justify-center'>
+                                    <Icon icon="wi:sunrise" className='smallIcon'/>
+                                    <p>{diffDate.astro.sunrise}</p>
+                                </div>
+                                <div className='flex justify-center'>
+                                    <Icon icon="wi:sunset" className='smallIcon'/>
+                                    <p>{diffDate.astro.sunset}</p>
+                                </div>
                                 </div>
                             </div>
                         </div>

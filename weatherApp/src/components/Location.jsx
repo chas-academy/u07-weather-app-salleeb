@@ -1,11 +1,12 @@
-import { useEffect, useState } from 'react'
-import { Icon } from '@iconify/react';
-import './Location.css'
-import Weather from './Weather';
+import { useEffect, useState } from "react";
+import { Icon } from "@iconify/react";
+import "./Location.css";
+import Weather from "./Weather";
 
 const apiKey = import.meta.env.VITE_APP_KEY;
 const apiUrl = `https://api.weatherapi.com/v1/search.json?key=${apiKey}&q=`;
-const weatherUrl = (city) => `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${city}&days=7&aqi=no&alerts=no`;
+const weatherUrl = (city) =>
+  `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${city}&days=7&aqi=no&alerts=no`;
 
 export function Location() {
   const [city, setCity] = useState("");
@@ -15,6 +16,7 @@ export function Location() {
   const [location, setLocation] = useState("");
   const [citySuggestion, setCitySuggestion] = useState([]);
   const [hour, setHour] = useState([]);
+  const [status, setStatus] = useState(null);
 
   const handleClick = async (clickedCity) => {
     setCity(clickedCity);
@@ -26,83 +28,116 @@ export function Location() {
     setForecast(data.forecast);
     setLocation(data.location.name);
     setHour(data.forecast.hour);
-  }
+  };
 
   // Geolocation
   const handleLocationClick = async () => {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(async (position) => {
+      setStatus("Loading...");
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
         const lat = position.coords.latitude;
         const lng = position.coords.longitude;
-        const curPosition = lat + "," + lng
+        const curPosition = lat + "," + lng;
 
         const resp = await fetch(weatherUrl(curPosition));
         const data = await resp.json();
+        setStatus("");
         setCurrent(data.current);
         setForecast(data.forecast);
         setLocation(data.location.name);
         setHour(data.forecast.hour);
-        clearTimeout()
-      })
-    }
-  }
+        clearTimeout();
+      },
+      () => {
+        setStatus(
+          alert(
+            "Unable to retrieve your location. Tap Allow to let the app use location information as needed"
+          )
+        );
+      }
+    );
+  };
 
   useEffect(() => {
-      const getDataAfterTimeout = setTimeout(() => {
+    const getDataAfterTimeout = setTimeout(() => {
       const fetchCitySuggestion = async () => {
-
         const resp = await fetch(apiUrl + city);
         const data = await resp.json();
-        const citySuggestionData = data.map(curData => 
-          `${curData.name}, ${curData.region}, ${curData.country}`
-          );
+        const citySuggestionData = data.map(
+          (curData) => `${curData.name}, ${curData.region}, ${curData.country}`
+        );
         setCitySuggestion(citySuggestionData);
       };
       if (!clicked && city.length > 2) {
         fetchCitySuggestion();
-      }
-      else {
+      } else {
         setCitySuggestion([]);
         setClicked(false);
       }
     }, 100);
 
     return () => clearTimeout(getDataAfterTimeout);
-  }, [city])
+  }, [city]);
 
- return (
+  return (
     <>
-      <div className="location flex justify-center text-center">
-        <div className="body w-8/12 bg-cyan-600 opacity-75 rounded-lg">
-        <div className='inline-block'>
-        <input type="text"
-        className='userInput'
-        placeholder='Enter your position'
-        value={city}
-        onChange={(event) => setCity(event.target.value)}/>
-                
-        <div className='posBtn'>
-          <button className='searchBtn flex' onClick={() => handleLocationClick()}>
-          <Icon icon="ep:position" />
-            Get current position</button>
-        </div>
+      <div className="location">
+        <div className="flex justify-center text-center">
+          <div className="body w-8/12">
+            <div className="flex justify-center">
+              <div className="input">
+                <input
+                  type="text"
+                  className="userInput"
+                  placeholder="Enter your position"
+                  value={city}
+                  onChange={(event) => setCity(event.target.value)}
+                />
 
-        {citySuggestion.length > 0 && (
-          <div className='suggestion'>
-          {citySuggestion.map(curCity => (
-            <div key={curCity} className="hover:bg-slate-400 hover:text-white hover:cursor-pointer" onClick={() =>
-              handleClick(curCity)}>{curCity}</div>
-          ))}
+                {citySuggestion.length > 0 && (
+                  <div className="suggestion">
+                    {citySuggestion.map((curCity) => (
+                      <div
+                        key={curCity}
+                        className="hover:bg-slate-400 py-1 hover:text-white hover:cursor-pointer"
+                        onClick={() => handleClick(curCity)}
+                      >
+                        {curCity}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <button
+                  className="searchBtn flex items-center"
+                  onClick={() => handleLocationClick()}
+                >
+                  <Icon icon="ep:position" className="arrowImg" />
+                  <span className="btnText">Find your location</span>
+                </button>
+              </div>
+            </div>
+            {current && forecast && (
+              <Weather
+                current={current}
+                city={location}
+                forecast={forecast}
+                hour={hour}
+              />
+            )}
           </div>
-        )}
         </div>
-
-        { current && forecast && <Weather current={current} city={location} forecast={forecast} hour={hour}/> }
-
+        <div>
+          {status ? ( <p className="flex justify-center text-xl">{status}</p> ) : ( <></> )}
         </div>
       </div>
     </>
-  )
+  );
 }
 
-export default Location
+export default Location;

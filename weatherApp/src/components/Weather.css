@@ -91,3 +91,61 @@
 .forecastDays {
     padding-bottom: 5vh;
 }
+
+.btn-text {
+    font-size: 2.5vw;
+    margin-right: 3vw;
+    color: antiquewhite;
+}
+
+@media screen and (max-width: 700px) {
+    .btn-text {
+        font-size: 5vw;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .current {
+        margin-bottom: 2vh;
+    }
+
+    .curForecast {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: column;
+        margin: 1vh 2vw;
+    }
+
+    .curImage {
+        width: 30vw;
+    }
+
+    .icon {
+        font-size: 3rem;
+    }
+
+    .sunrise {
+        margin: 1vh 0;
+    }
+
+    .wind {
+        margin-right: 0;
+    }
+
+    .text {
+        font-size: 2vh;
+    }
+
+    .img {
+        width: 25vw;
+    }
+
+    .bigImg {
+        width: 25vw;
+    }
+
+    .daysForecast {
+        flex-direction: column;
+        margin: 0 2vw;
+    }
+}
