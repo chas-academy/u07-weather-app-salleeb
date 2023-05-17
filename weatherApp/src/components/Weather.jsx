@@ -106,7 +106,6 @@ export function Weather({current, city, forecast: {forecastday}}) {
 
                     <h2 className='forecast'>Forecast for {city}</h2>
                     {forecastday.map((diffDate) => (
-                        console.log(diffDate),
                     <div key={diffDate.date} id={diffDate.date} className='forecastDays'>
                         <b className='dates'>{diffDate.date}</b>
                         <div className='daysForecast flex justify-center items-center'>
